@@ -1110,7 +1110,7 @@ void handle_updatefwm_html()
 
 void handle_wifim_html()
 {
-  server.send ( 200, "text/html", "<form method='POST' action='/wifi_ajax'><input type='hidden' name='form' value='wifi'><input type='text' name='ssid'><input type='password' name='password'><input type='submit' value='Submit'></form><br<b>Enter WiFi credentials (SSID and password)</b>");
+  server.send ( 200, "text/html", "<form method='POST' action='/wifi_ajax'><input type='hidden' name='form' value='wifi'><i>SSID:</i><input type='text' name='ssid'> <i>password:</i><input type='password' name='password'><input type='submit' value='Submit'></form><br<b>Enter WiFi credentials</b>");
 }
 
 
