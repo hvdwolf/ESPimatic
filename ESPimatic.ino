@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
 #include <EEPROM.h>
 #include <SPI.h>
 #include "LedControlSPIESP8266.h"
@@ -15,6 +16,7 @@
 //holds the current upload
 File UploadFile;
 String fileName;
+String espName    = "myEspimatic";
 
 //-------------- FSBrowser application -----------
 //format bytes
@@ -144,6 +146,8 @@ long adc_sendInterval    = 60000; //in millis
 long adc_lastInterval  = 0;
 
 ESP8266WebServer  server(80);
+MDNSResponder   mdns;
+
 //String ClientIP;
 WiFiClient client;
 
@@ -492,6 +496,14 @@ void setup()
       }
     }
   }
+  /* Activate the mdns */
+  if (!mdns.begin(espName.c_str(), WiFi.localIP())) {
+    Serial.println("Error setting up MDNS responder!");
+    while(1) { 
+      delay(1000);
+    }
+  }
+  
 
   String RelayEnabled = HandleEeprom(enablerelay_Address, "read");
   if (RelayEnabled == "1")
