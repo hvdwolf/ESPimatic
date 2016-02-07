@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266mDNS.h>
 #include <EEPROM.h>
 #include <SPI.h>
 #include "LedControlSPIESP8266.h"
@@ -15,6 +16,7 @@
 //holds the current upload
 File UploadFile;
 String fileName;
+String espName    = "myEspimatic";
 
 //-------------- FSBrowser application -----------
 //format bytes
@@ -144,6 +146,7 @@ long adc_sendInterval    = 60000; //in millis
 long adc_lastInterval  = 0;
 
 ESP8266WebServer  server(80);
+MDNSResponder   mdns;
 //String ClientIP;
 WiFiClient client;
 
@@ -490,6 +493,14 @@ void setup()
         CharOnLED(25, 0);
         CharOnLED(29, 1);
       }
+    }
+  }
+
+  /* Activate the mdns */
+  if (!mdns.begin(espName.c_str(), WiFi.localIP())) {
+    Serial.println("Error setting up MDNS responder!");
+    while(1) { 
+      delay(1000);
     }
   }
 
@@ -1098,7 +1109,7 @@ void handle_updatefwm_html()
 
 void handle_wifim_html()
 {
-  server.send ( 200, "text/html", "<form method='POST' action='/wifi_ajax'><input type='hidden' name='form' value='wifi'><input type='text' name='ssid'><input type='password' name='password'><input type='submit' value='Submit'></form><br<b>Enter WiFi credentials</b>");
+  server.send ( 200, "text/html", "<form method='POST' action='/wifi_ajax'><input type='hidden' name='form' value='wifi'><i>SSID:</i><input type='text' name='ssid'> <i>password:</i><input type='password' name='password'><input type='submit' value='Submit'></form><br<b>Enter WiFi credentials</b>");
 }
 
 
